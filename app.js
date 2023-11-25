@@ -11,7 +11,6 @@ app.get('/',(req,res)=>{
     res.send("App Running");
 });
 
-
 app.use('/api/category',category_route)
 app.use('/api/product',product_route)
 
