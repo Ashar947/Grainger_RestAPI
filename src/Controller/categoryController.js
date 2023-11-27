@@ -4,7 +4,7 @@ const { throw_error } = require('./errorController');
 
 const getAllCategories = async(req,res)=>{
     try{
-        const categories = await Category.find({});
+        const categories = await Category.find({},'_id category_name category_image');
         if (!categories){
             throw_error("Could Not Find Categories")
         }
