@@ -1,7 +1,7 @@
 const Category = require('../Models/categorySchema');
 const { throw_error } = require('./errorController');
 
-
+// Gets All Category
 const getAllCategories = async(req,res)=>{
     try{
         const categories = await Category.find({},'_id category_name category_image');

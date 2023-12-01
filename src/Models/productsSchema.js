@@ -3,7 +3,7 @@ require('dotenv').config();
 
 
 const productTypeSchema = new mongoose.Schema({
-    type_name: String,
+    type_name: { type: String ,default:"" },
     type_image: String,
     table_header: [String],
     table_body: [[String]],
@@ -18,6 +18,9 @@ const productSchema = new mongoose.Schema({
         type: String,
     },
     description: {
+        type: String,
+    },
+    image: {
         type: String,
     },
     product_types: [productTypeSchema],

@@ -3,36 +3,37 @@ const Product = require('../Models/productsSchema');
 const Category = require('../Models/categorySchema');
 
 
-
+// Get All Products For A Specific Category
 const getProductsByCategory = async (req, res) => {
     try {
-        const limit = 30;
+        const limit = 20;
         let page = Number(req.query.page) || 1;
-        let skip = (page - 1) * limit
-        const id = req.params.cat_id
+        let skip = (page - 1) * limit;
+        const id = req.params.cat_id;
         const category = await Category.findOne({ _id: id });
-        if (!category) {
-            throw_error("Could Not Find Category")
-        }
-        console.log(category.category_name)
-        const count = await Product.countDocuments({ productCategory: category.category_name });
-        // const prods = await Product.find({ productCategory: category.category_name });
-        const prods = await Product.find({ productCategory: category.category_name }).limit(limit).skip(skip);
-        if (!prods) {
-            throw_error("Products Not Found");
-        }
-        return res.status(200).json({
-                message: "Product Found",
-                data: prods,
-                currentPage: page,
-                totalPages: Math.ceil(count / limit)
-            });
-        // return res.status(200).json({ message: "Products Found", data: prods });
-    } catch (error) {
-        res.status(400).json({ message: error.message })
-    }
-}
 
+        if (!category) {
+            throw new Error("Could Not Find Category");
+        }
+        const count = await Product.countDocuments({ productCategory: category.category_name });
+        const prods = await Product.find({ productCategory: category.category_name }, '_id mainTitle description image').limit(limit).skip(skip);
+
+        if (!prods || prods.length === 0) {
+            throw new Error("Products Not Found");
+        }
+
+        return res.status(200).json({
+            message: "Products Found",
+            data: prods,
+            currentPage: page,
+            totalPages: Math.ceil(count / limit)
+        });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+// Gets Single Product By Id
 const productById = async (req, res) => {
     try {
         const id = req.params.id;
@@ -47,10 +48,10 @@ const productById = async (req, res) => {
     }
 }
 
-
+// Gets Products For Search Result
 const searchProduct = async (req, res) => {
     try {
-        const limit = 3;
+        const limit = 20;
         let page = Number(req.query.page) || 1;
         let skip = (page - 1) * limit
         const query = req.params.query;
@@ -58,7 +59,7 @@ const searchProduct = async (req, res) => {
             throw_error("Query Cannot Be Empty");
         }
         const count = await Product.countDocuments({ mainTitle: { $regex: query, $options: 'i' } });
-        const prod = await Product.find({ mainTitle: { $regex: query, $options: 'i' } }).limit(limit).skip(skip);
+        const prod = await Product.find({ mainTitle: { $regex: query, $options: 'i' } }, '_id mainTitle description image').limit(limit).skip(skip);
         if (!prod) {
             throw_error(`No Products Found With Name ${query}`)
         }
