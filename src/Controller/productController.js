@@ -44,14 +44,13 @@ const productById = async (req, res) => {
         return res.status(200).json({ message: "Product Found", data: product });
     } catch (error) {
         res.status(400).json({ message: error.message })
-
     }
 }
 
 // Gets Products For Search Result
 const searchProduct = async (req, res) => {
     try {
-        const limit = 20;
+        const limit = 24;
         let page = Number(req.query.page) || 1;
         let skip = (page - 1) * limit
         const query = req.params.query;
