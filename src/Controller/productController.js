@@ -17,7 +17,7 @@ const getProductsByCategory = async (req, res) => {
             throw new Error("Could Not Find Category");
         }
         const count = await Product.countDocuments({ productCategory: category.category_name });
-        const prods = await Product.find({ productCategory: category.category_name }, '_id mainTitle description image').limit(limit).skip(skip);
+        const prods = await Product.find({ productCategory: category.category_name }, '_id productCategory mainTitle description image').limit(limit).skip(skip);
 
         if (!prods || prods.length === 0) {
             throw new Error("Products Not Found");
@@ -74,7 +74,7 @@ const searchProduct = async (req, res) => {
     }
 }
 
-const getPartsByCategory = async(req,res)=>{
+const getPartsByCategory = async (req, res) => {
     try {
         const limit = 20;
         let page = Number(req.query.page) || 1;
@@ -142,4 +142,4 @@ const searchPart = async (req, res) => {
 }
 
 
-module.exports = { productById, getProductsByCategory, searchProduct }
+module.exports = { productById, getProductsByCategory, searchProduct, getPartsByCategory, partById, searchPart }
